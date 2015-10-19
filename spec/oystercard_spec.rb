@@ -35,14 +35,20 @@ describe Oystercard do
   end
 
   it "expect touch_in to change the value of jorney" do
+    subject.top_up Oystercard::MIN_BALANCE
     subject.touch_in
     expect(subject).to be_in_journey
   end
 
   it "expect touch_out to change the value of journey in false" do
+    subject.top_up Oystercard::MIN_BALANCE
     subject.touch_in
     subject.touch_out
     expect(subject).not_to be_in_journey
+  end
+
+  it 'should not allow touch it with less than £1 balance' do
+    expect{subject.touch_in}.to raise_error "Minimum balance is £#{Oystercard::MIN_BALANCE}"
   end
 
 end
