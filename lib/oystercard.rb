@@ -5,6 +5,7 @@ class Oystercard
   DEFAULT_BALANCE = 0
   MAX_BALANCE = 90
   MIN_BALANCE = 1
+  MIN_FARE = 1
 
   def initialize(balance = DEFAULT_BALANCE)
     @in_journey = false
@@ -16,10 +17,6 @@ class Oystercard
     @balance += amount
   end
 
-  def deduct amount
-    @balance -= amount
-  end
-
   def touch_in
     fail StandardError, "Minimum balance is £#{MIN_BALANCE}" unless @balance >= MIN_BALANCE
     @in_journey = true
@@ -27,6 +24,7 @@ class Oystercard
 
   def touch_out
     @in_journey = false
+    deduct MIN_FARE
   end
 
   def in_journey?
@@ -39,4 +37,8 @@ class Oystercard
     curent_value = balance + amount
   end
 
+  def deduct amount
+    @balance -= amount
+  end
+  
 end

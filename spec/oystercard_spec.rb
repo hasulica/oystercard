@@ -17,11 +17,6 @@ describe Oystercard do
     expect{subject.top_up(1)}.to raise_error "the limit is #{Oystercard::MAX_BALANCE}"
   end
 
-  it 'deducts money from balance' do
-    subject.top_up(20)
-    expect{subject.deduct 10}.to change {subject.balance}.by -10
-  end
-
   it 'expect to respond to touch in' do
     expect(subject).to respond_to(:touch_in)
   end
@@ -49,6 +44,12 @@ describe Oystercard do
 
   it 'should not allow touch it with less than £1 balance' do
     expect{subject.touch_in}.to raise_error "Minimum balance is £#{Oystercard::MIN_BALANCE}"
+  end
+
+  it "reduces the balance for the journey" do
+    subject.top_up(10)
+    subject.touch_in
+    expect{subject.touch_out}.to change{subject.balance}.by(-Oystercard::MIN_FARE)
   end
 
 end
