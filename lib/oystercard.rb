@@ -17,7 +17,7 @@ class Oystercard
   private
 
   def new_balance(amount)
-    curent_value = @balance + amount
+    curent_value = balance + amount
   end
 
 end
