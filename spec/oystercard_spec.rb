@@ -9,9 +9,12 @@ describe Oystercard do
   end
 
   it 'adds money to balance' do
-    initial_balance = subject.balance
-    subject.top_up(20)
-    expect(subject.balance).to eq initial_balance + 20
+    expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
+  end
+
+  it "raise an error if the new balance is more than #{Oystercard::MAX_BALANCE}" do
+    subject.top_up Oystercard::MAX_BALANCE
+    expect{subject.top_up(1)}.to raise_error "the limit is #{Oystercard::MAX_BALANCE}"
   end
 
 end
