@@ -7,17 +7,18 @@ class Journey
   def initialize
     @entry_station = nil
     @exit_station = nil
-    @journey_history = []
+    @journey_history = [{"entry_station" => nil, "exit_station" => nil}]
   end
 
   def enter(station)
     @entry_station = station
-    journey_history
+    @journey_history << { "entry_station" => station }
   end
 
   def leave(station)
     @exit_station = station
-    trip
+    @journey_history.last.store("exit_station", station)
+    @journey_history.last.freeze
   end
 
   def fare
@@ -29,7 +30,7 @@ class Journey
   end
 
   def complete?
-    return false if exit_station == nil || entry_station == nil
+    return false if journey_history.last["entry_station"] == nil || journey_history.last["exit_station"] == nil
     true
   end
 
