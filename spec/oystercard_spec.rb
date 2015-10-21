@@ -40,7 +40,7 @@ describe Oystercard do
   it "expect touch_out to change the value of journey to false" do
     subject.top_up Oystercard::MIN_BALANCE
     subject.touch_in(station)
-    subject.touch_out
+    subject.touch_out(station)
     expect(subject).not_to be_in_journey
   end
 
@@ -51,20 +51,31 @@ describe Oystercard do
   it 'should reduce balance on touch out by MIN_FARE' do
     subject.top_up Oystercard::MIN_BALANCE
     subject.touch_in(station)
-    expect{ subject.touch_out }.to change{ subject.balance }.by -Oystercard::MIN_FARE
+    expect{ subject.touch_out(station) }.to change{ subject.balance }.by -Oystercard::MIN_FARE
   end
 
   it 'should remember the entry station where it touches in' do
     subject.top_up Oystercard::MIN_BALANCE
     subject.touch_in(station)
-    expect(subject.entry_station).to eq station
+    expect(subject.journey.last["entry_station"]).to eq station
   end
 
-  it 'forgets the entry station on touch out' do
+  it 'should remember exit station on touch out' do
     subject.top_up Oystercard::MIN_BALANCE
     subject.touch_in(station)
-    subject.touch_out
-    expect(subject.entry_station).to eq nil
+    subject.touch_out(station)
+    expect(subject.journey.last["exit_station"]).to eq station
+  end
+
+  it 'should add latest stations to journey history' do
+    subject.top_up Oystercard::MIN_BALANCE
+    subject.touch_in(station)
+    subject.touch_out(station)
+    expect(subject.journey).to include({"entry_station" => station, "exit_station" => station})
+  end
+
+  it 'should have an empty list of journeys by default' do
+    expect(subject.journey).to eq []
   end
 
 end
