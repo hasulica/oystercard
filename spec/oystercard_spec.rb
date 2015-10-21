@@ -1,4 +1,5 @@
 require 'oystercard'
+require 'journey'
 
 describe Oystercard do
 
@@ -51,38 +52,19 @@ describe Oystercard do
   it 'should reduce balance on touch out by MIN_FARE' do
     subject.top_up Oystercard::MIN_BALANCE
     subject.touch_in(station)
-    expect{ subject.touch_out(station) }.to change{ subject.balance }.by -Oystercard::MIN_FARE
+    expect{ subject.touch_out(station) }.to change{ subject.balance }.by -Journey::MIN_FARE
   end
 
-  it 'should remember the entry station where it touches in' do
-    subject.top_up Oystercard::MIN_BALANCE
-    subject.touch_in(station)
-    expect(subject.journey.last["entry_station"]).to eq station
-  end
-
-  it 'should remember exit station on touch out' do
-    subject.top_up Oystercard::MIN_BALANCE
-    subject.touch_in(station)
-    subject.touch_out(station)
-    expect(subject.journey.last["exit_station"]).to eq station
-  end
-
-  it 'should add latest stations to journey history' do
-    subject.top_up Oystercard::MIN_BALANCE
-    subject.touch_in(station)
-    subject.touch_out(station)
-    expect(subject.journey).to include({"entry_station" => station, "exit_station" => station})
-  end
-
-  it 'should have an empty list of journeys by default' do
-    expect(subject.journey).to eq []
-  end
-
-  it 'should remember information about a station\'s zone' do
-    subject.top_up Oystercard::MIN_BALANCE
-    subject.touch_in(station)
-    subject.touch_out(station)
-    expect(subject.journey.last["exit_station"].zone).to be 1
-  end
-
+  # it 'should remember the entry station where it touches in' do
+  #   subject.top_up Oystercard::MIN_BALANCE
+  #   subject.touch_in(station)
+  #   expect(subject.journey.last["entry_station"]).to eq station
+  # end
+  #
+  # it 'should remember exit station on touch out' do
+  #   subject.top_up Oystercard::MIN_BALANCE
+  #   subject.touch_in(station)
+  #   subject.touch_out(station)
+  #   expect(subject.journey.last["exit_station"]).to eq station
+  # end
 end

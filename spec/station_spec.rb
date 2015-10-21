@@ -5,5 +5,5 @@ describe Station do
     station = Station.new("euston", 1)
     expect(station).to have_attributes(:name => "euston", :zone => 1)
   end
-
+  
 end
