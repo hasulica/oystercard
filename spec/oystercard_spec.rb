@@ -2,7 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
 
-  let(:station) { double :station }
+  let(:station) { double :station, :name => "bank", :zone => 1  }
 
   it {is_expected.to respond_to(:balance)}
 
@@ -76,6 +76,13 @@ describe Oystercard do
 
   it 'should have an empty list of journeys by default' do
     expect(subject.journey).to eq []
+  end
+
+  it 'should remember information about a station\'s zone' do
+    subject.top_up Oystercard::MIN_BALANCE
+    subject.touch_in(station)
+    subject.touch_out(station)
+    expect(subject.journey.last["exit_station"].zone).to be 1
   end
 
 end
