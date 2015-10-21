@@ -40,7 +40,7 @@ describe Oystercard do
     expect(subject).to be_in_journey
   end
 
-  it "expect touch_out to change the value of journey in false" do
+  it "expect touch_out to change the value of journey to false" do
     subject.top_up Oystercard::MIN_BALANCE
     subject.touch_in
     subject.touch_out
@@ -49,6 +49,12 @@ describe Oystercard do
 
   it 'should not allow touch it with less than £1 balance' do
     expect{subject.touch_in}.to raise_error "Minimum balance is £#{Oystercard::MIN_BALANCE}"
+  end
+
+  it 'should reduce balance on touch out by MIN_FARE' do
+    subject.top_up Oystercard::MIN_BALANCE
+    subject.touch_in
+    expect{ subject.touch_out }.to change{ subject.balance }.by -Oystercard::MIN_FARE
   end
 
 end
