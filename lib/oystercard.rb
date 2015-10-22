@@ -18,6 +18,7 @@ class Oystercard
   end
 
   def touch_in(station)
+    deduct Journey::PENALTY_FARE if @in_use
     fail StandardError, "Minimum balance is £#{MIN_BALANCE}" unless @balance >= MIN_BALANCE
     journey.enter(station)
     @in_use = true
